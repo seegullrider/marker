@@ -177,3 +177,12 @@ cython_debug/
 .idea/
 
 .vscode/
+
+# Example conversion outputs (local artifacts)
+output/
+output_gpu/
+output_chunks/
+datta_merged_full.md
+
+# Local environment/cache created during setup
+.conda/
