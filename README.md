@@ -140,6 +140,35 @@ NUM_DEVICES=4 NUM_WORKERS=15 marker_chunk_convert ../pdf_in ../md_out
 - `NUM_DEVICES` is the number of GPUs to use.  Should be `2` or greater.
 - `NUM_WORKERS` is the number of parallel processes to run on each GPU.
 
+## Convert large PDFs in chunks (helper script)
+
+For very large PDFs (or limited VRAM), you can process the file in fixed-size page chunks with `chunk_convert_pdf.py`.
+
+```shell
+python chunk_convert_pdf.py "E:\\zoterostorage\\storage\\7828IPIN\\Electronic Transport in Mesoscopic Systems -- Supriyo Datta.pdf" --chunk-size 10 --output-root "D:\\Maker\\output_chunks" --skip-existing
+```
+
+What this script does:
+- Reads total page count automatically.
+- Splits the file into chunk tasks (for example, `0-9`, `10-19`, ...).
+- Converts each chunk into its own output folder.
+- Retries failed chunks with lower batch sizes to reduce OOM risk.
+
+Useful options:
+- `--dry-run`: print the chunk plan without running conversion.
+- `--start-page` / `--end-page`: process only part of a document.
+- `--torch-device`: defaults to `cuda`.
+
+## Merge chunk outputs into one markdown (helper script)
+
+After chunk conversion, you can merge all chunk markdown files into a single markdown file:
+
+```shell
+python merge_chunks.py
+```
+
+By default, this merges from `D:\\Maker\\output_chunks\\datta` into `D:\\Maker\\datta_merged_full.md`, preserving chunk order.
+
 ## Use from python
 
 See the `PdfConverter` class at `marker/converters/pdf.py` function for additional arguments that can be passed.
